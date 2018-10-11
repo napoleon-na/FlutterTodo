@@ -25,6 +25,16 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<Widget> _todoList = [];
 
+  Widget _makeTodoItem(String text) {
+    return Padding(
+        padding: new EdgeInsets.all(10.0),
+        child: new Text(
+          text,
+          style: TextStyle(fontSize: 24.0),
+        )
+      );
+  }
+
   void _incrementCounter() {
     // TODO: show modal to add new todo item
   }
@@ -46,13 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _getTodoList() {
     _todoList.add(
-      Padding(
-        padding: new EdgeInsets.all(10.0),
-        child: new Text(
-          'default todo text.',
-          style: TextStyle(fontSize: 24.0),
-        )
-      )
+      _makeTodoItem('default todo text.')
     );
     return _todoList;
   }
