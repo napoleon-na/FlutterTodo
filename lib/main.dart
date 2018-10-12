@@ -23,7 +23,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Widget> _todoList = [];
+  final todoList = <Widget>[];
 
   Widget _makeTodoItem(String text) {
     return Padding(
@@ -37,6 +37,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() {
     // TODO: show modal to add new todo item
+    setState(() {
+      todoList.add(_makeTodoItem('add text'));
+    });
   }
 
   @override
@@ -45,19 +48,23 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: new AppBar(
         title: new Text(widget.title),
       ),
-      body: ListView(children: _getTodoList()),
+      body: new Column(
+        children: <Widget>[
+          new Expanded(
+            child: new ListView.builder(
+              itemCount: todoList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return todoList[index];
+              },
+            ),
+          ),
+        ],
+      ),
       floatingActionButton: new FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: new Icon(Icons.add),
       ),
     );
-  }
-
-  _getTodoList() {
-    _todoList.add(
-      _makeTodoItem('default todo text.')
-    );
-    return _todoList;
   }
 }
