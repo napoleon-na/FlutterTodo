@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 void main() => runApp(new MyApp());
 
@@ -22,8 +23,14 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => new _MyHomePageState();
 }
 
+enum Answer {
+  ADD,
+  CANCEL
+}
+
 class _MyHomePageState extends State<MyHomePage> {
   final todoList = <Widget>[];
+  final controller = TextEditingController();
 
   Widget _makeTodoItem(String text) {
     return Padding(
@@ -35,11 +42,62 @@ class _MyHomePageState extends State<MyHomePage> {
       );
   }
 
-  void _incrementCounter() {
-    // TODO: show modal to add new todo item
+  SimpleDialog _addTodoDialog() {
+    return SimpleDialog(
+      title: const Text('Add a new todo'),
+      // TODO styling
+      children: <Widget>[
+        TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: 'new todo'
+          ),
+        ),
+        SimpleDialogOption(
+          onPressed: () {
+            // TODO validation
+            Navigator.pop(context, Answer.ADD);
+          },
+          child: const Text('Add'),
+        ),
+        SimpleDialogOption(
+          onPressed: () {
+            Navigator.pop(context, Answer.CANCEL);
+          },
+          child: const Text('Cancel'),
+        ),
+      ],
+    );
+  }
+
+  void _addTodo(String todo) {
     setState(() {
-      todoList.add(_makeTodoItem('add text'));
+      todoList.insert(0, _makeTodoItem(todo));
     });
+  }
+
+  Future<Null> _askedToAdd() async {
+    switch (await showDialog<Answer>(
+      context: context,
+      builder: (BuildContext context) {
+        return _addTodoDialog();
+      }
+    )) {
+      case Answer.ADD:
+        _addTodo(controller.text);
+        controller.clear();
+        break;
+
+      case Answer.CANCEL:
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -61,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       floatingActionButton: new FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: _askedToAdd,
         tooltip: 'Increment',
         child: new Icon(Icons.add),
       ),
