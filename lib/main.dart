@@ -31,6 +31,7 @@ enum Answer {
 class _MyHomePageState extends State<MyHomePage> {
   final todoList = <Widget>[];
   final controller = TextEditingController();
+  String errorMsg = '';
 
   Widget _makeTodoItem(String text) {
     return Padding(
@@ -47,25 +48,57 @@ class _MyHomePageState extends State<MyHomePage> {
       title: const Text('Add a new todo'),
       // TODO styling
       children: <Widget>[
-        TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: 'new todo'
+        Padding(
+          padding: new EdgeInsets.all(4.0),
+          child: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              hintText: 'new todo'
+            ),
           ),
         ),
-        SimpleDialogOption(
-          onPressed: () {
-            // TODO validation
-            Navigator.pop(context, Answer.ADD);
-          },
-          child: const Text('Add'),
+        Padding(
+          padding: new EdgeInsets.only(left: 8.0, right: 8.0),
+          child: Text(
+            errorMsg,
+            style: TextStyle(color: Colors.red),
+          )
         ),
-        SimpleDialogOption(
-          onPressed: () {
-            Navigator.pop(context, Answer.CANCEL);
-          },
-          child: const Text('Cancel'),
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: SimpleDialogOption(
+                onPressed: () {
+                  // TODO fix to the timing that errorMsg shows when add button pressed.
+                  setState(() {
+                    errorMsg = (controller.text == '')? 'input a new todo.': '';
+                  });
+                  if (errorMsg != '') {
+                    return;
+                  }
+                  Navigator.pop(context, Answer.ADD);
+                },
+                child: const Text(
+                  'Add',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            Expanded(
+              child: SimpleDialogOption(
+                onPressed: () {
+                  setState(() {
+                    errorMsg = '';
+                  });
+                  Navigator.pop(context, Answer.CANCEL);
+                },
+                child: const Text(
+                  'Cancel',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            )
+          ],
         ),
       ],
     );
