@@ -28,9 +28,11 @@ enum Answer {
   CANCEL
 }
 
+// TO DO it is better to be able to class sharing between _MyHomePageState and _MySimpleDialogState
+String input = '';
+
 class _MyHomePageState extends State<MyHomePage> {
   final todoList = <Widget>[];
-  String input = '';
 
   Widget _makeTodoItem(String text) {
     return Padding(
@@ -76,7 +78,13 @@ class _MyHomePageState extends State<MyHomePage> {
             child: new ListView.builder(
               itemCount: todoList.length,
               itemBuilder: (BuildContext context, int index) {
-                return todoList[index];
+                final todo = todoList[index];
+                return Dismissible(
+                    key: Key('todo_$index'),
+                    onDismissed: (direction) => todoList.removeAt(index),
+                    child: todo,
+                    background: Container(color: Colors.red),
+                );
               },
             ),
           ),
@@ -98,7 +106,6 @@ class MySimpleDialog extends StatefulWidget {
   _MySimpleDialogState createState() => new _MySimpleDialogState();
 }
 
-// TO DO fix the exception and pass the data to parent (might not to do that though..) 
 class _MySimpleDialogState extends State<MySimpleDialog> {
   final controller = TextEditingController();
   String errorMsg = '';
@@ -147,6 +154,7 @@ class _MySimpleDialogState extends State<MySimpleDialog> {
                   if (errorMsg != '') {
                     return;
                   }
+                  input = controller.text;
                   Navigator.pop(context, Answer.ADD);
                 },
                 child: const Text(
