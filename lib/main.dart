@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(new MyApp());
 
@@ -32,7 +33,18 @@ enum Answer {
 String input = '';
 
 class _MyHomePageState extends State<MyHomePage> {
-  final todoList = <Widget>[];
+  final todoTexts = <String>[];
+  // final _prefs = SharedPreferences.getInstance();
+
+  void _init() {
+    // TO DO read data from shared preferences.
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
 
   Widget _makeTodoItem(String text) {
     return Padding(
@@ -46,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _addTodo(String todo) {
     setState(() {
-      todoList.insert(0, _makeTodoItem(todo));
+      todoTexts.insert(0, todo);
     });
   }
 
@@ -76,13 +88,13 @@ class _MyHomePageState extends State<MyHomePage> {
         children: <Widget>[
           new Expanded(
             child: new ListView.builder(
-              itemCount: todoList.length,
+              itemCount: todoTexts.length,
               itemBuilder: (BuildContext context, int index) {
-                final todo = todoList[index];
+                final todo = todoTexts[index];
                 return Dismissible(
                     key: Key('todo_$index'),
-                    onDismissed: (direction) => todoList.removeAt(index),
-                    child: todo,
+                    onDismissed: (direction) => todoTexts.removeAt(index),
+                    child: _makeTodoItem(todo),
                     background: Container(color: Colors.red),
                 );
               },
