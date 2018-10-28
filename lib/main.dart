@@ -138,7 +138,6 @@ class _MySimpleDialogState extends State<MySimpleDialog> {
   Widget build(BuildContext context) {
     return SimpleDialog(
       title: const Text('Add a new todo'),
-      // TODO styling
       children: <Widget>[
         Padding(
           padding: new EdgeInsets.only(left: 8.0, right: 8.0),
